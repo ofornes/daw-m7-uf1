@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd"
+	name="${this.name}">
+	<publishDate position="left" format="dd-MM-yyy HH:mm" />
+	<version position="left" />
+	
+	<bannerLeft>
+		<href>/</href>
+		<title>${this.name}</title>
+		<name>${this.name}</name>
+	</bannerLeft>
+	
+
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-fluido-skin</artifactId>
+		<version>1.9</version>
+	</skin>
+
+	<custom>
+		<fluidoSkin>
+			<topBarEnabled>true</topBarEnabled>
+			<sideBarEnabled>false</sideBarEnabled>
+		</fluidoSkin>
+	</custom>
+	<body>
+		<menu name="Info and Reports" title="Info and Reports">
+			<item name="Covertura" href="jacoco/index.html" />
+			<item name="Reports" href="project-reports.html" />
+			<item name="Info" href="project-info.html" />
+			<item name="JavaDocs" href="apidocs" />
+			<item name="Source code" href="${this.scm.url}" title="Github"
+				img="images/GitHub-Mark-32px.png">
+				<description>Github</description>
+			</item>
+			<item name="SCM" href="scm.html" />
+			<item name="Desenvolupadors" href="team.html" />
+		</menu>
+	</body>
+</project>

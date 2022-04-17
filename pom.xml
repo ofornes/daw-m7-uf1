@@ -15,7 +15,33 @@
 	<description>M7 UF1 - Desenvolupament web en servidor</description>
 	<properties>
 		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<lombok-plugin.version>1.18.20.0</lombok-plugin.version>
+		<jacoco-plugin.version>0.8.8</jacoco-plugin.version>
 	</properties>
+
+	<developers>
+		<developer>
+			<id>ofornes</id>
+			<name>Octavi Fornés</name>
+			<email>octavi@fornes.cat</email>
+		</developer>
+	</developers>
+
+	<scm>
+		<url>https://github.com/ofornes/daw-m7-uf1</url>
+		<connection>scm:git:https://github.octavi.com/ofornes/daw-m7-uf1.git</connection>
+		<developerConnection>scm:git:git@github.octavi.com:ofornes/daw-m7-uf1.git</developerConnection>
+	</scm>
+
+	<distributionManagement>
+		<site>
+			<id>github</id>
+			<url>scm:git:git@github.octavi.com:ofornes/daw-m7-uf1.git</url>
+		</site>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -70,7 +96,99 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-maven-plugin</artifactId>
+				<version>${lombok-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>generate-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>delombok</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<!-- attached to Maven test phase -->
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.11.0</version>
+				<configuration>
+					<skipDeploy>true</skipDeploy> <!-- don't deploy site with maven-site-plugin -->
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-publish-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<scmBranch>gh-pages</scmBranch>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
+	<!-- Report configuration -->
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<!-- select non-aggregate reports -->
+							<report>report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<version>2.12.1</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>3.0.0-M6</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
 
 </project>
