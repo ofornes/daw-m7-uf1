@@ -18,9 +18,9 @@
  */
 package cat.albirar.daw.cocktails;
 
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -42,7 +42,7 @@ import cat.albirar.daw.cocktails.service.impl.CocktailsServiceImpl;
  * @author Octavi Forn&eacute;s <mailto:ofornes@albirar.cat[]>
  * @since 1.0.0
  */
-@SpringBootConfiguration
+@Configuration
 @ComponentScan(basePackageClasses = { MainController.class, CocktailsServiceImpl.class })
 @EnableWebSecurity
 public class CocktailsConfiguration {
