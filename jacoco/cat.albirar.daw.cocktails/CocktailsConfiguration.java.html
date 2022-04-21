@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CocktailsConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">cocktails</a> &gt; <a href="index.source.html" class="el_package">cat.albirar.daw.cocktails</a> &gt; <span class="el_source">CocktailsConfiguration.java</span></div><h1>CocktailsConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * This file is part of &quot;cocktails&quot;.
+ * 
+ * &quot;cocktails&quot; is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * &quot;cocktails&quot; is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with calendar.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *
+ * Copyright (C) 2022 Octavi Fornés
+ */
+package cat.albirar.daw.cocktails;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.User.UserBuilder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import cat.albirar.daw.cocktails.controllers.MainController;
+import cat.albirar.daw.cocktails.crypt.CocktailsPasswordEncoder;
+import cat.albirar.daw.cocktails.service.impl.CocktailsServiceImpl;
+
+/**
+ * Configuració de l'aplicaició.
+ * 
+ * @author Octavi Forn&amp;eacute;s &lt;mailto:ofornes@albirar.cat[]&gt;
+ * @since 1.0.0
+ */
+@Configuration
+@ComponentScan(basePackageClasses = { MainController.class, CocktailsServiceImpl.class })
+@EnableWebSecurity
+<span class="fc" id="L48">public class CocktailsConfiguration {</span>
+	private static final String ADMIN_ENC_PASS = &quot;40a12d2b7f546c624461b26bd41573e697e91466dc80ef42acb46685a41b961648422e4529fcbef2fdaf79c7edfbc5e737bed9c224d93ecd26a7f5e028bfa3ed&quot;;
+	private static final String PEPE_ENC_PASS = &quot;c63c4194ea7ab967c7a951a2f784d794318de97710e74bd6d3dcfd680058aecc941973c52e0f74e28aca2840db5a61fb64bfbf974037c34dfb94ebe1b4c860aa&quot;;
+	private static final String MANOLO_ENC_PASS = &quot;3acd3650d01ddf7b2c5fd3488997982684da62c9318a54ee239d5a1f3db72e90b548f10489888ba0da2f0384fa161f319b7d707f2f89cdbe1cc1b6d9ed192fd8&quot;;
+	
+	@Bean
+	public UserDetailsService users() {
+		// The builder will ensure the passwords are encoded before saving in memory
+<span class="fc" id="L56">		UserBuilder userBuilder = User.builder();</span>
+		
+<span class="fc" id="L58">		UserDetails admin = userBuilder</span>
+<span class="fc" id="L59">				.username(&quot;admin&quot;)</span>
+<span class="fc" id="L60">				.password(ADMIN_ENC_PASS)</span>
+<span class="fc" id="L61">				.roles(&quot;USER&quot;)</span>
+<span class="fc" id="L62">				.build();</span>
+<span class="fc" id="L63">		UserDetails pepe = userBuilder</span>
+<span class="fc" id="L64">				.username(&quot;pepe&quot;)</span>
+<span class="fc" id="L65">				.password(PEPE_ENC_PASS)</span>
+<span class="fc" id="L66">				.roles(&quot;USER&quot;)</span>
+<span class="fc" id="L67">				.build();</span>
+<span class="fc" id="L68">		UserDetails manolo = userBuilder</span>
+<span class="fc" id="L69">				.username(&quot;manolo&quot;)</span>
+<span class="fc" id="L70">				.password(MANOLO_ENC_PASS)</span>
+<span class="fc" id="L71">				.roles(&quot;USER&quot;)</span>
+<span class="fc" id="L72">				.build();</span>
+<span class="fc" id="L73">		return new InMemoryUserDetailsManager(admin, pepe, manolo);</span>
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+<span class="fc" id="L78">		return new CocktailsPasswordEncoder();</span>
+	}
+	
+	@Bean
+	public SecurityFilterChain web(HttpSecurity http) throws Exception {
+<span class="fc" id="L83">		http</span>
+<span class="fc" id="L84">			.authorizeHttpRequests(authorize -&gt; authorize</span>
+<span class="fc" id="L85">					.mvcMatchers(&quot;/&quot;).permitAll()</span>
+<span class="fc" id="L86">					.mvcMatchers(&quot;/list&quot;, &quot;/show/*&quot;, &quot;/logout&quot;).hasRole(&quot;USER&quot;)</span>
+<span class="fc" id="L87">					.anyRequest().denyAll())</span>
+<span class="fc" id="L88">			.formLogin(form -&gt; form</span>
+<span class="fc" id="L89">					.loginPage(&quot;/&quot;)</span>
+<span class="fc" id="L90">					.defaultSuccessUrl(&quot;/&quot;, false)</span>
+<span class="fc" id="L91">					.failureUrl(&quot;/&quot;)</span>
+					)
+<span class="fc" id="L93">			.logout(logout -&gt; logout</span>
+<span class="fc" id="L94">		            .logoutRequestMatcher(new AntPathRequestMatcher(&quot;/logout&quot;, &quot;GET&quot;))</span>
+<span class="fc" id="L95">		            .clearAuthentication(true)</span>
+<span class="fc" id="L96">		            .invalidateHttpSession(true)</span>
+<span class="fc" id="L97">		            .logoutSuccessUrl(&quot;/&quot;)</span>
+		            )
+			;
+<span class="fc" id="L100">		return http.build();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

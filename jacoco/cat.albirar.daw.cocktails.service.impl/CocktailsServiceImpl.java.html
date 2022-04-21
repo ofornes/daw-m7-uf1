@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CocktailsServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">cocktails</a> &gt; <a href="index.source.html" class="el_package">cat.albirar.daw.cocktails.service.impl</a> &gt; <span class="el_source">CocktailsServiceImpl.java</span></div><h1>CocktailsServiceImpl.java</h1><pre class="source lang-java linenums">/*
+ * This file is part of &quot;cocktails&quot;.
+ * 
+ * &quot;cocktails&quot; is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * &quot;cocktails&quot; is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with calendar.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *
+ * Copyright (C) 2022 Octavi Fornés
+ */
+package cat.albirar.daw.cocktails.service.impl;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import cat.albirar.daw.cocktails.models.CocktailDetailBean;
+import cat.albirar.daw.cocktails.service.ICocktailsService;
+
+/**
+ * Implementació del servei de coctails.
+ * @author Octavi Forn&amp;eacute;s &lt;mailto:ofornes@albirar.cat[]&gt;
+ * @since 1.0.0
+ */
+@Service
+<span class="fc" id="L48">public class CocktailsServiceImpl implements ICocktailsService {</span>
+<span class="fc" id="L49">	private static final Logger LOGGER = LoggerFactory.getLogger(CocktailsServiceImpl.class);</span>
+	
+	@Value(&quot;classpath:/cocktails.json&quot;)
+	private Resource jsonCocktails;
+	
+<span class="fc" id="L54">	private List&lt;CocktailDetailBean&gt; cocktails = null;</span>
+<span class="fc" id="L55">	private Map&lt;String, CocktailDetailBean&gt; cocktailsMap = null;</span>
+	
+	@PostConstruct
+	private void initList() {
+		ObjectMapper om;
+		
+<span class="fc" id="L61">		om = new ObjectMapper();</span>
+		try {
+<span class="fc" id="L63">			cocktails = om.readValue(jsonCocktails.getInputStream(), new TypeReference&lt;List&lt;CocktailDetailBean&gt;&gt;(){});</span>
+<span class="fc" id="L64">			cocktailsMap = Collections.synchronizedMap(new TreeMap&lt;&gt;());</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">			for(CocktailDetailBean c : cocktails) {</span>
+<span class="fc" id="L66">				cocktailsMap.put(c.getId(), c);</span>
+<span class="fc" id="L67">			}</span>
+<span class="nc" id="L68">		} catch (IOException e) {</span>
+<span class="nc" id="L69">			LOGGER.error(&quot;No s'ha pogut carregar la llista de coctails!&quot;, e);</span>
+<span class="nc" id="L70">			throw new RuntimeException(&quot;No s'ha pogut carregar la llista de coctails!&quot;, e);</span>
+<span class="fc" id="L71">		}</span>
+<span class="fc" id="L72">	}</span>
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List&lt;CocktailDetailBean&gt; findAll() {
+<span class="nc" id="L78">		return Collections.unmodifiableList(cocktails);</span>
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Optional&lt;CocktailDetailBean&gt; findById(String id) {
+<span class="nc bnc" id="L86" title="All 2 branches missed.">		if(cocktailsMap.containsKey(id)) {</span>
+<span class="nc" id="L87">			return Optional.of(cocktailsMap.get(id));</span>
+		}
+<span class="nc" id="L89">		return Optional.empty();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
