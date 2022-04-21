@@ -36,20 +36,20 @@ S'ha optat, com ja s'ha esmentat, pel framework Spring MVC.
 
 S'han traslladat els models PHP a models HTML amb el llenguatge de plantilles Thymeleaf.
 
-La classe de configuració [cat.albirar.daw.cocktails.CocktailsConfiguration](apidocs/cat/albirar/daw/cocktails/CocktailsConfiguration.html) és l’encarregada de crear els elements _injectables_ de l’aplicació.
+La classe de configuració [cat.albirar.daw.cocktails.CocktailsConfiguration](xref/cat/albirar/daw/cocktails/CocktailsConfiguration.html) és l’encarregada de crear els elements _injectables_ de l’aplicació.
 
 ### Dades
 
 Les dades s’han desplaçat de la vista (vars.php) al codi, a un arxiu json (`/cocktails/src/main/resources/cocktails.json`). Aquest arxiu es carrega a un servei específic format per una interfície (contracte) i la implementació.
 
-* Interfície: [cat.albirar.daw.cocktails.service.ICocktailsService](apidocs/cat/albirar/daw/cocktails/service/ICocktailsService.html)
-* Implementació: [cat.albirar.daw.cocktails.service.impl.CocktailsServiceImpl](apidocs/cat/albirar/daw/cocktails/service/impl/CocktailsServiceImpl.html)
+* Interfície: [cat.albirar.daw.cocktails.service.ICocktailsService](xref/cat/albirar/daw/cocktails/service/ICocktailsService.html)
+* Implementació: [cat.albirar.daw.cocktails.service.impl.CocktailsServiceImpl](xref/cat/albirar/daw/cocktails/service/impl/CocktailsServiceImpl.html)
 
 ### Autenticació i autorització
 
 L’autenticació i l’autorització es fa amb el mòdul spring-security. Els usuaris amb les passwords encriptades es creen inicialment per codi i s’emmagatzemem en memòria.
 
-A la classe de configuració, el mètode [CocktailsConfiguration.users()](apidocs/cat/albirar/daw/cocktails/CocktailsConfiguration.html#users--) s’encarrega de crear la infraestructura d’autenticació i assignació de _roles_.
+A la classe de configuració, el mètode [CocktailsConfiguration.users()](xref/cat/albirar/daw/cocktails/CocktailsConfiguration.html#L54) s’encarrega de crear la infraestructura d’autenticació i assignació de _roles_.
 
 ```java
 	@Bean
@@ -76,15 +76,15 @@ A la classe de configuració, el mètode [CocktailsConfiguration.users()](apidoc
 	}
 ```
 
-Les constants `ADMIN_ENC_PASS`, `PEPE_ENC_PASS` i `MANOLO_ENC_PASS` contenen les passwords encriptades de `vars.php`.
+Les constants [ADMIN_ENC_PASS](xref/cat/albirar/daw/cocktails/CocktailsConfiguration.html#L49), [PEPE_ENC_PASS](xref/cat/albirar/daw/cocktails/CocktailsConfiguration.html#L50) i [MANOLO_ENC_PASS](xref/cat/albirar/daw/cocktails/CocktailsConfiguration.html#L51) contenen les passwords encriptades de `vars.php`.
 
-La classe [cat.albirar.daw.cocktails.crypt.CocktailsPasswordEncoder](apidocs/cat/albirar/daw/cocktails/crypt/CocktailsPasswordEncoder.html) és l’encarregada de codificar les contrasenyes introduïdes pels usuaris per tal de validar-les amb les dels usuaris registrats.
+La classe [cat.albirar.daw.cocktails.crypt.CocktailsPasswordEncoder](xref/cat/albirar/daw/cocktails/crypt/CocktailsPasswordEncoder.html) és l’encarregada de codificar les contrasenyes introduïdes pels usuaris per tal de validar-les amb les dels usuaris registrats.
 
 Implementa el digest **SHA-512** i concatena el sufix `SuperSecret.` a les passwords abans de calcular el digest.
 
 S’assigna el _rol_ `USER` a tots els usuaris per tal de definir la política d’autorització.
 
-Aquesta política (paths HTTP i _rols_ que hi poden accedir) es defineix, també, a la classe de configuració, al mètode [CocktailsConfiguration.web()](apidocs/cat/albirar/daw/cocktails/CocktailsConfiguration.html#web-org.springframework.security.config.annotation.web.builders.HttpSecurity-):
+Aquesta política (paths HTTP i _rols_ que hi poden accedir) es defineix, també, a la classe de configuració, al mètode [CocktailsConfiguration.web()](xref/cat/albirar/daw/cocktails/CocktailsConfiguration.html#L82):
 
 ```java
 	@Bean
@@ -118,7 +118,7 @@ Per últim, es restringeix l’accés a qualsevol altre _path_.
 
 ### Controlador
 
-En el patró MVC de l’aplicació, el controlador està implementat per la classe [cat.albirar.daw.cocktails.controllers.MainController](apidocs/cat/albirar/daw/cocktails/controllers/MainController.html).
+En el patró MVC de l’aplicació, el controlador està implementat per la classe [cat.albirar.daw.cocktails.controllers.MainController](xref/cat/albirar/daw/cocktails/controllers/MainController.html).
 
 Els mètodes estan anotats per tal d’establir la relació entre el path i mètode http i el mètode de la classe que ho gestiona, per exemple:
 
@@ -141,7 +141,7 @@ public class MainController {
 }
 ```
 
-Spring troba la implementació corresponent per l’anotació de la classe (`@Service`) i pel fet que implementa la mateixa interfície desitjada en la injecció.
+Spring troba la implementació corresponent per l’anotació de la classe (`@Service`) i pel fet que implementa la mateixa interfície desitjada en la injecció (veure [CocktailsServiceImpl](xref/cat/albirar/daw/cocktails/service/impl/CocktailsServiceImpl.html)).
 
 ### Vistes
 
