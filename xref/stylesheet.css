@@ -572,3 +572,54 @@ div.block div.block span.interfaceName {
 div.contentContainer ul.blockList li.blockList h2{
     padding-bottom:0px;
 }
+
+/* JXR style sheet */
+a.jxr_linenumber:link {
+    color: #00f;
+}
+
+a.jxr_linenumber:visited {
+    color: #00a;
+}
+
+a.jxr_linenumber:active, a.jxr_linenumber:hover {
+    color: #f30 !important;
+}
+
+em.comment {
+    color: #390;
+}
+
+.string {
+    color: #009;
+}
+
+#overview {
+    padding: 2px;
+    font-size: 90%;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+hr {
+    color: #000;
+}
+
+.jxr_comment
+{
+    color: #390;
+}
+
+.jxr_javadoccomment
+{
+    color: #A00;
+}
+
+.jxr_string
+{
+    color: #009;
+}
+
+.jxr_keyword
+{
+    color: #000;
+}
