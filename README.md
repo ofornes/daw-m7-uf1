@@ -4,9 +4,15 @@
 
 Els models PHP es troben a la carpeta `src/site/models`
 
-La release [v0.1.2](https://github.com/ofornes/daw-m7-uf1-uf3/releases/tag/v0.1.2) permet provar el resultat.
-
 Navegeu a [https://ofornes.github.io/daw-m7-uf1-uf3/](https://ofornes.github.io/daw-m7-uf1-uf3/) per a veure la documentació.
 
 El codi font el trobareu a [https://github.com/ofornes/daw-m7-uf1-uf3](https://github.com/ofornes/daw-m7-uf1-uf3)
+
+## UF1
+
+La release [v0.1.2](https://github.com/ofornes/daw-m7-uf1-uf3/releases/tag/v0.1.2) permet provar el resultat.
+
+## UF3
+
+La release v0.1.4 permet provar el resultat.
 

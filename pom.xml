@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>cat.albirar.daw</groupId>
 	<artifactId>cocktails</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.1.4</version>
 	<name>cocktails</name>
 	<description>M7 UF1 - Desenvolupament web en servidor</description>
 	<properties>
