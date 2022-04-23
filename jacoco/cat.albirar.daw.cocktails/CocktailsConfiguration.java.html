@@ -18,17 +18,21 @@
  */
 package cat.albirar.daw.cocktails;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.User.UserBuilder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -37,67 +41,67 @@ import cat.albirar.daw.cocktails.crypt.CocktailsPasswordEncoder;
 import cat.albirar.daw.cocktails.service.impl.CocktailsServiceImpl;
 
 /**
- * Configuració de l'aplicaició.
+ * Configuració de l'aplicació.
  * 
  * @author Octavi Forn&amp;eacute;s &lt;mailto:ofornes@albirar.cat[]&gt;
- * @since 1.0.0
+ * @since 0.0.1
+ * @since 0.1.4
  */
 @Configuration
 @ComponentScan(basePackageClasses = { MainController.class, CocktailsServiceImpl.class })
 @EnableWebSecurity
-<span class="fc" id="L48">public class CocktailsConfiguration {</span>
-	private static final String ADMIN_ENC_PASS = &quot;40a12d2b7f546c624461b26bd41573e697e91466dc80ef42acb46685a41b961648422e4529fcbef2fdaf79c7edfbc5e737bed9c224d93ecd26a7f5e028bfa3ed&quot;;
-	private static final String PEPE_ENC_PASS = &quot;c63c4194ea7ab967c7a951a2f784d794318de97710e74bd6d3dcfd680058aecc941973c52e0f74e28aca2840db5a61fb64bfbf974037c34dfb94ebe1b4c860aa&quot;;
-	private static final String MANOLO_ENC_PASS = &quot;3acd3650d01ddf7b2c5fd3488997982684da62c9318a54ee239d5a1f3db72e90b548f10489888ba0da2f0384fa161f319b7d707f2f89cdbe1cc1b6d9ed192fd8&quot;;
-	
+<span class="fc" id="L53">public class CocktailsConfiguration {</span>
 	@Bean
-	public UserDetailsService users() {
-		// The builder will ensure the passwords are encoded before saving in memory
-<span class="fc" id="L56">		UserBuilder userBuilder = User.builder();</span>
-		
-<span class="fc" id="L58">		UserDetails admin = userBuilder</span>
-<span class="fc" id="L59">				.username(&quot;admin&quot;)</span>
-<span class="fc" id="L60">				.password(ADMIN_ENC_PASS)</span>
-<span class="fc" id="L61">				.roles(&quot;USER&quot;)</span>
-<span class="fc" id="L62">				.build();</span>
-<span class="fc" id="L63">		UserDetails pepe = userBuilder</span>
-<span class="fc" id="L64">				.username(&quot;pepe&quot;)</span>
-<span class="fc" id="L65">				.password(PEPE_ENC_PASS)</span>
-<span class="fc" id="L66">				.roles(&quot;USER&quot;)</span>
-<span class="fc" id="L67">				.build();</span>
-<span class="fc" id="L68">		UserDetails manolo = userBuilder</span>
-<span class="fc" id="L69">				.username(&quot;manolo&quot;)</span>
-<span class="fc" id="L70">				.password(MANOLO_ENC_PASS)</span>
-<span class="fc" id="L71">				.roles(&quot;USER&quot;)</span>
-<span class="fc" id="L72">				.build();</span>
-<span class="fc" id="L73">		return new InMemoryUserDetailsManager(admin, pepe, manolo);</span>
+	public UserDetailsService users(@Autowired DataSource dataSource) {
+<span class="fc" id="L56">		return new JdbcUserDetailsManager(dataSource);</span>
 	}
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-<span class="fc" id="L78">		return new CocktailsPasswordEncoder();</span>
+<span class="fc" id="L61">		return new CocktailsPasswordEncoder();</span>
 	}
 	
 	@Bean
 	public SecurityFilterChain web(HttpSecurity http) throws Exception {
-<span class="fc" id="L83">		http</span>
-<span class="fc" id="L84">			.authorizeHttpRequests(authorize -&gt; authorize</span>
-<span class="fc" id="L85">					.mvcMatchers(&quot;/&quot;).permitAll()</span>
-<span class="fc" id="L86">					.mvcMatchers(&quot;/list&quot;, &quot;/show/*&quot;, &quot;/logout&quot;).hasRole(&quot;USER&quot;)</span>
-<span class="fc" id="L87">					.anyRequest().denyAll())</span>
-<span class="fc" id="L88">			.formLogin(form -&gt; form</span>
-<span class="fc" id="L89">					.loginPage(&quot;/&quot;)</span>
-<span class="fc" id="L90">					.defaultSuccessUrl(&quot;/&quot;, false)</span>
-<span class="fc" id="L91">					.failureUrl(&quot;/&quot;)</span>
+<span class="fc" id="L66">		http</span>
+<span class="fc" id="L67">			.authorizeHttpRequests(authorize -&gt; authorize</span>
+<span class="fc" id="L68">					.mvcMatchers(&quot;/&quot;).permitAll()</span>
+<span class="fc" id="L69">					.mvcMatchers(&quot;/list&quot;, &quot;/show/*&quot;, &quot;/logout&quot;).hasRole(&quot;USER&quot;)</span>
+<span class="fc" id="L70">					.anyRequest().denyAll())</span>
+<span class="fc" id="L71">			.formLogin(form -&gt; form</span>
+<span class="fc" id="L72">					.loginPage(&quot;/&quot;)</span>
+<span class="fc" id="L73">					.defaultSuccessUrl(&quot;/&quot;, false)</span>
+<span class="fc" id="L74">					.failureUrl(&quot;/&quot;)</span>
 					)
-<span class="fc" id="L93">			.logout(logout -&gt; logout</span>
-<span class="fc" id="L94">		            .logoutRequestMatcher(new AntPathRequestMatcher(&quot;/logout&quot;, &quot;GET&quot;))</span>
-<span class="fc" id="L95">		            .clearAuthentication(true)</span>
-<span class="fc" id="L96">		            .invalidateHttpSession(true)</span>
-<span class="fc" id="L97">		            .logoutSuccessUrl(&quot;/&quot;)</span>
+<span class="fc" id="L76">			.logout(logout -&gt; logout</span>
+<span class="fc" id="L77">		            .logoutRequestMatcher(new AntPathRequestMatcher(&quot;/logout&quot;, &quot;GET&quot;))</span>
+<span class="fc" id="L78">		            .clearAuthentication(true)</span>
+<span class="fc" id="L79">		            .invalidateHttpSession(true)</span>
+<span class="fc" id="L80">		            .logoutSuccessUrl(&quot;/&quot;)</span>
 		            )
 			;
-<span class="fc" id="L100">		return http.build();</span>
+<span class="fc" id="L83">		return http.build();</span>
+	}
+	
+	@Bean
+	public DataSource dataSource() {
+<span class="fc" id="L88">		return new EmbeddedDatabaseBuilder()</span>
+<span class="fc" id="L89">                .generateUniqueName(true)</span>
+<span class="fc" id="L90">                .setType(EmbeddedDatabaseType.H2)</span>
+<span class="fc" id="L91">                .setScriptEncoding(&quot;UTF-8&quot;)</span>
+<span class="fc" id="L92">                .addScript(&quot;db/schema.sql&quot;)</span>
+<span class="fc" id="L93">                .addScripts(&quot;db/user_data.sql&quot;, &quot;db/cocktails_data.sql&quot;)</span>
+<span class="fc" id="L94">                .build();</span>
+	}
+	
+	@Bean
+	public JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) {
+<span class="fc" id="L99">		return new JdbcTemplate(dataSource);</span>
+	}
+	
+	@Bean
+	public NamedParameterJdbcTemplate namedParameterJdbcTemplate(@Autowired JdbcTemplate jdbcTemplate) {
+<span class="fc" id="L104">		return new NamedParameterJdbcTemplate(jdbcTemplate);</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

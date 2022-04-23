@@ -26,88 +26,92 @@
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">package</strong> cat.albirar.daw.cocktails;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.springframework.context.annotation.Bean;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.springframework.context.annotation.ComponentScan;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.springframework.context.annotation.Configuration;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.config.annotation.web.builders.HttpSecurity;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.core.userdetails.User;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.core.userdetails.User.UserBuilder;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.core.userdetails.UserDetails;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.core.userdetails.UserDetailsService;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.crypto.password.PasswordEncoder;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.provisioning.InMemoryUserDetailsManager;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.web.SecurityFilterChain;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> cat.albirar.daw.cocktails.controllers.MainController;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> cat.albirar.daw.cocktails.crypt.CocktailsPasswordEncoder;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> cat.albirar.daw.cocktails.service.impl.CocktailsServiceImpl;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> javax.sql.DataSource;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.springframework.beans.factory.annotation.Autowired;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.springframework.context.annotation.Bean;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.springframework.context.annotation.ComponentScan;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.springframework.context.annotation.Configuration;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.springframework.jdbc.core.JdbcTemplate;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.config.annotation.web.builders.HttpSecurity;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.core.userdetails.UserDetailsService;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.crypto.password.PasswordEncoder;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.provisioning.JdbcUserDetailsManager;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.web.SecurityFilterChain;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * Configuració de l'aplicaició.</em>
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * </em>
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment"> * @author Octavi Forn&amp;eacute;s &lt;<a href="mailto:ofornes@albirar.cat" target="alexandria_uri">mailto:ofornes@albirar.cat</a>[]&gt;</em>
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment"> * @since 1.0.0</em>
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  @Configuration
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  @ComponentScan(basePackageClasses = { MainController.<strong class="jxr_keyword">class</strong>, CocktailsServiceImpl.<strong class="jxr_keyword">class</strong> })
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  @EnableWebSecurity
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> CocktailsConfiguration {
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String ADMIN_ENC_PASS = <span class="jxr_string">"40a12d2b7f546c624461b26bd41573e697e91466dc80ef42acb46685a41b961648422e4529fcbef2fdaf79c7edfbc5e737bed9c224d93ecd26a7f5e028bfa3ed"</span>;
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String PEPE_ENC_PASS = <span class="jxr_string">"c63c4194ea7ab967c7a951a2f784d794318de97710e74bd6d3dcfd680058aecc941973c52e0f74e28aca2840db5a61fb64bfbf974037c34dfb94ebe1b4c860aa"</span>;
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String MANOLO_ENC_PASS = <span class="jxr_string">"3acd3650d01ddf7b2c5fd3488997982684da62c9318a54ee239d5a1f3db72e90b548f10489888ba0da2f0384fa161f319b7d707f2f89cdbe1cc1b6d9ed192fd8"</span>;
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  	
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>  	@Bean
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  	<strong class="jxr_keyword">public</strong> UserDetailsService users() {
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  		<em class="jxr_comment">// The builder will ensure the passwords are encoded before saving in memory</em>
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>  		UserBuilder userBuilder = User.builder();
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>  		
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>  		UserDetails admin = userBuilder
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>  				.username(<span class="jxr_string">"admin"</span>)
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>  				.password(ADMIN_ENC_PASS)
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  				.roles(<span class="jxr_string">"USER"</span>)
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>  				.build();
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  		UserDetails pepe = userBuilder
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>  				.username(<span class="jxr_string">"pepe"</span>)
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  				.password(PEPE_ENC_PASS)
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  				.roles(<span class="jxr_string">"USER"</span>)
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  				.build();
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  		UserDetails manolo = userBuilder
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  				.username(<span class="jxr_string">"manolo"</span>)
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  				.password(MANOLO_ENC_PASS)
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  				.roles(<span class="jxr_string">"USER"</span>)
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  				.build();
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> InMemoryUserDetailsManager(admin, pepe, manolo);
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  	}
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  	
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  	@Bean
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  	<strong class="jxr_keyword">public</strong> PasswordEncoder passwordEncoder() {
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="CocktailsPasswordEncoder" href="../../../../cat/albirar/daw/cocktails/crypt/CocktailsPasswordEncoder.html#CocktailsPasswordEncoder">CocktailsPasswordEncoder</a>();
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  	}
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  	
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  	@Bean
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  	<strong class="jxr_keyword">public</strong> SecurityFilterChain web(HttpSecurity http) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  		http
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>  			.authorizeHttpRequests(authorize -&gt; authorize
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  					.mvcMatchers(<span class="jxr_string">"/"</span>).permitAll()
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>  					.mvcMatchers(<span class="jxr_string">"/list"</span>, <span class="jxr_string">"/show/*"</span>, <span class="jxr_string">"/logout"</span>).hasRole(<span class="jxr_string">"USER"</span>)
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  					.anyRequest().denyAll())
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>  			.formLogin(form -&gt; form
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>  					.loginPage(<span class="jxr_string">"/"</span>)
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>  					.defaultSuccessUrl(<span class="jxr_string">"/"</span>, false)
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  					.failureUrl(<span class="jxr_string">"/"</span>)
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>  					)
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>  			.logout(logout -&gt; logout
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  		            .logoutRequestMatcher(<strong class="jxr_keyword">new</strong> AntPathRequestMatcher(<span class="jxr_string">"/logout"</span>, <span class="jxr_string">"GET"</span>))
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>  		            .clearAuthentication(<strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>  		            .invalidateHttpSession(<strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  		            .logoutSuccessUrl(<span class="jxr_string">"/"</span>)
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>  		            )
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>  			;
-<a class="jxr_linenumber" name="L100" href="#L100">100</a> 		<strong class="jxr_keyword">return</strong> http.build();
-<a class="jxr_linenumber" name="L101" href="#L101">101</a> 	}
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> }
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> cat.albirar.daw.cocktails.controllers.MainController;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> cat.albirar.daw.cocktails.crypt.CocktailsPasswordEncoder;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> cat.albirar.daw.cocktails.service.impl.CocktailsServiceImpl;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment"> * Configuració de l'aplicació.</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment"> * @author Octavi Forn&amp;eacute;s &lt;<a href="mailto:ofornes@albirar.cat" target="alexandria_uri">mailto:ofornes@albirar.cat</a>[]&gt;</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment"> * @since 0.0.1</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment"> * @since 0.1.4</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  @Configuration
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  @ComponentScan(basePackageClasses = { MainController.<strong class="jxr_keyword">class</strong>, CocktailsServiceImpl.<strong class="jxr_keyword">class</strong> })
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  @EnableWebSecurity
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> CocktailsConfiguration {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  	@Bean
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  	<strong class="jxr_keyword">public</strong> UserDetailsService users(@Autowired DataSource dataSource) {
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> JdbcUserDetailsManager(dataSource);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  	}
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  	
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  	@Bean
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  	<strong class="jxr_keyword">public</strong> PasswordEncoder passwordEncoder() {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="CocktailsPasswordEncoder" href="../../../../cat/albirar/daw/cocktails/crypt/CocktailsPasswordEncoder.html#CocktailsPasswordEncoder">CocktailsPasswordEncoder</a>();
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  	}
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  	
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  	@Bean
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  	<strong class="jxr_keyword">public</strong> SecurityFilterChain web(HttpSecurity http) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  		http
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  			.authorizeHttpRequests(authorize -&gt; authorize
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  					.mvcMatchers(<span class="jxr_string">"/"</span>).permitAll()
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  					.mvcMatchers(<span class="jxr_string">"/list"</span>, <span class="jxr_string">"/show/*"</span>, <span class="jxr_string">"/logout"</span>).hasRole(<span class="jxr_string">"USER"</span>)
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  					.anyRequest().denyAll())
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  			.formLogin(form -&gt; form
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  					.loginPage(<span class="jxr_string">"/"</span>)
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  					.defaultSuccessUrl(<span class="jxr_string">"/"</span>, false)
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  					.failureUrl(<span class="jxr_string">"/"</span>)
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  					)
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  			.logout(logout -&gt; logout
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  		            .logoutRequestMatcher(<strong class="jxr_keyword">new</strong> AntPathRequestMatcher(<span class="jxr_string">"/logout"</span>, <span class="jxr_string">"GET"</span>))
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  		            .clearAuthentication(<strong class="jxr_keyword">true</strong>)
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  		            .invalidateHttpSession(<strong class="jxr_keyword">true</strong>)
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  		            .logoutSuccessUrl(<span class="jxr_string">"/"</span>)
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  		            )
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  			;
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  		<strong class="jxr_keyword">return</strong> http.build();
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  	}
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  	
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  	@Bean
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  	<strong class="jxr_keyword">public</strong> DataSource dataSource() {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> EmbeddedDatabaseBuilder()
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>                  .generateUniqueName(<strong class="jxr_keyword">true</strong>)
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>                  .setType(EmbeddedDatabaseType.H2)
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>                  .setScriptEncoding(<span class="jxr_string">"UTF-8"</span>)
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>                  .addScript(<span class="jxr_string">"db/schema.sql"</span>)
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>                  .addScripts(<span class="jxr_string">"db/user_data.sql"</span>, <span class="jxr_string">"db/cocktails_data.sql"</span>)
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>                  .build();
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  	}
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  	
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  	@Bean
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  	<strong class="jxr_keyword">public</strong> JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> JdbcTemplate(dataSource);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 	}
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 	
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 	@Bean
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 	<strong class="jxr_keyword">public</strong> NamedParameterJdbcTemplate namedParameterJdbcTemplate(@Autowired JdbcTemplate jdbcTemplate) {
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 		<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> NamedParameterJdbcTemplate(jdbcTemplate);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> 	}
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2022. All rights reserved.</div>

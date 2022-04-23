@@ -3,4 +3,6 @@ cat.albirar.daw.cocktails.controllers
 cat.albirar.daw.cocktails.crypt
 cat.albirar.daw.cocktails.models
 cat.albirar.daw.cocktails.service
+cat.albirar.daw.cocktails.service.db
 cat.albirar.daw.cocktails.service.impl
+cat.albirar.daw.cocktails.service.mappers
