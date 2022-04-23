@@ -28,7 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Password encoder per a autenticació en la web de cocktails.
  * Afegeix automàticament el sufix esperat.
  * @author Octavi Forn&eacute;s <mailto:ofornes@albirar.cat[]>
- * @since 1.0.0
+ * @since 0.0.1
  */
 public class CocktailsPasswordEncoder implements PasswordEncoder {
 	private static final String SUFIX = "SuperSecret.";

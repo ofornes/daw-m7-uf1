@@ -16,21 +16,24 @@
  *
  * Copyright (C) 2022 Octavi Fornés
  */
-package cat.albirar.daw.cocktails;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+package cat.albirar.daw.cocktails.service.db;
 
 /**
- * Punt d'entrada de l'aplicació.
- * 
+ * Constants de la base de dades de cocktails.
  * @author Octavi Forn&eacute;s <mailto:ofornes@albirar.cat[]>
- * @since 0.0.1
+ * @since 0.1.4
  */
-@SpringBootApplication
-public class CocktailsApplication {
+public final class ConstantsCocktailsDb {
+	public static final String ID = "ID_DRINK";
+	public static final String NAME = "NAME";
+	public static final String THUMB = "THUMB";
+	public static final String INGREDIENTS = "INGREDIENTS";
+	public static final String INSTRUCTIONS = "INSTRUCTIONS";
+	public static final String TAULA = "COCKTAILS";
+	public static final String SQL_FIND_ALL = "SELECT * FROM " + TAULA;
+	public static final String SQL_FIND_BY_ID = "SELECT * FROM " + TAULA + " WHERE " + ID + "=:" + ID;
 
-	public static void main(String[] args) {
-		SpringApplication.run(CocktailsApplication.class, args);
+	private ConstantsCocktailsDb() {
+		// Per a evitar instàncies
 	}
 }

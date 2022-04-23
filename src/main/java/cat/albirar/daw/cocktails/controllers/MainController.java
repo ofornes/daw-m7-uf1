@@ -32,7 +32,7 @@ import cat.albirar.daw.cocktails.service.ICocktailsService;
 /**
  * Main web controller.
  * @author Octavi Forn&eacute;s <mailto:ofornes@albirar.cat[]>
- * @since 1.0.0
+ * @since 0.0.1
  */
 @Controller
 public class MainController {

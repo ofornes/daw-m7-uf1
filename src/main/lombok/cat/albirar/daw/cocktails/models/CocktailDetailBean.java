@@ -29,7 +29,7 @@ import lombok.extern.jackson.Jacksonized;
 /**
  * Bean de definició del detall del cocktail.
  * @author Octavi Forn&eacute;s <mailto:ofornes@albirar.cat[]>
- * @since 1.0.0
+ * @since 0.0.1
  */
 @Getter
 @SuperBuilder

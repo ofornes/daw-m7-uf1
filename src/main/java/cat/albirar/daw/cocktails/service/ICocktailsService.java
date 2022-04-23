@@ -26,7 +26,7 @@ import cat.albirar.daw.cocktails.models.CocktailDetailBean;
 /**
  * Remote cocktail service.
  * @author Octavi Forn&eacute;s <mailto:ofornes@albirar.cat[]>
- * @since 1.0.0
+ * @since 0.0.1
  */
 public interface ICocktailsService {
 	/**
